@@ -8,18 +8,19 @@ app.controller('myCtrl', function ($scope) {
         "description": "King",
         "price": "20"
     }, {
-        "title": "BED Sheet",
-        "description": "King",
-        "price": "6"
+        "title": "Cooling Fan",
+        "description": "cool air",
+        "price": "60"
     }, {
-        "title": "BED Frame",
-        "description": "King",
-        "price": "12"
+        "title": "Air Conditioner",
+        "description": "Window AC",
+        "price": "150"
     }, {
-        "title": "BED Pillow",
-        "description": "King",
-        "price": "3"
-    }];
+        "title": "Study Lamp",
+        "description": "35W",
+        "price": "25"
+    }
+];
     $scope.seatList = [];
     $("#orderDivId").show();
     $("#biilingId").hide();
