@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<title></title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="./eKart.js"></script>
+<style>
+    .bg-img {
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background: url(bgWall3.jpg);
+        background-size: cover;
+    }
+
+</style>
+
+<body ng-app="myApp" ng-controller="myCtrl" ng-init="onload();" class="bg-img">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: transparent;">
+        <img src="./logo.webp" style="height: 43px;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active menuCls" id="menuTabId" menuType="MENU">
+                    <a class="nav-link" href="#" ng-click="switchMenu('MENU','menuTabId')">Available</a>
+                </li>
+                <li class="nav-item menuCls" menuType="BILLING" id="billingTabId">
+                    <a class="nav-link" href="#" ng-click="switchMenu('BILLING','billingTabId')">Pending Order</a>
+                </li>
+                <li class="nav-item menuCls" menuType="HISTORY" id="orderHistoryTabId">
+                    <a class="nav-link" href="#" ng-click="switchMenu('HISTORY','orderHistoryTabId')">Confirmed
+                        Order</a>
+                </li>
+            </ul>
+            <span class="navbar-text" style="cursor: pointer;">
+                <i class="fa fa-sign-out" style="font-size: 20px;" ng-click="logout()">Logout</i>
+            </span>
+        </div>
+    </nav>
+    <div id="orderDivId" style="margin: 12px 12px 0 12px;">
+        <div class="row">
+            <div class="col-sm-4 mb-3" ng-repeat="data in gasCylnderList">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{data.title}}</h5>
+                        <p class="card-text">{{data.description}}</p>
+                        <p><strong>$ {{data.price}}</strong></p>
+                        <button ng-click="placeOrder(data)" class="btn btn-info" data-toggle="modal"
+                            data-target="#placeOrderModalId">Buy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Place Order Modal -->
+        <div class="modal fade" id="placeOrderModalId">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-info">
+                        <h4 class="modal-title text-white">Buy</h4>
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="contactId">Contact no.</label>
+                                    <input type="number" class="form-control" id="contactId"
+                                        placeholder="Enter Contact no." required>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label>Expected Delivery Date</label>
+                                    <input type="date" class="form-control" id="bookingDateId" value="" required>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label>Address</label>
+                                    <textarea type="text" class="form-control" id="locationId" value=""
+                                        required></textarea>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="contactId">Cost</label>
+                                    <input type="text" class="form-control" id="costId" value="{{orderDetails.price}}"
+                                        disabled required>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="contactId">Product</label>
+                                    <input type="text" class="form-control" id="titleId" value="{{orderDetails.title}}"
+                                        disabled required>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="contactId">Size</label>
+                                    <input type="text" class="form-control" id="descriptionId"
+                                        value="{{orderDetails.description}}" disabled required>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="reset" class="border btn btn-light" data-dismiss="modal">Close</button>
+                        <button type="button" class="border btn btn-info" ng-click="addOrder()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 p-0" id="biilingId">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Expected Delivery Date</th>
+                    <th scope="col">Order Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in viewOrderTableData">
+                    <td scope="col" class="text-white">{{data.title}}</td>
+                    <td scope="col" class="text-white">{{data.price}}</td>
+                    <td scope="col" class="text-white">{{data.description}}</td>
+                    <td scope="col" class="text-white">{{data.contactId}}</td>
+                    <td scope="col" class="text-white">{{data.orderDate}}</td>
+                    <td scope="col" class="text-white">
+                        <button ng-show="data.status == 'pending'" type="button"
+                            class="border btn-small btn-info rounded" ng-click="getOrderData(data)" data-toggle="modal"
+                            data-target="#processToPayModalId">Pay</button>
+                        <span ng-show="data.status != 'pending'">{{data.status}}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- process to pay -->
+        <div class="modal fade" id="processToPayModalId">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-info">
+                        <h4 class="modal-title text-white">Process to pay</h4>
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="ammountId">Amount</label>
+                                    <input type="text" class="form-control" id="ammountId" value="" readonly>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="paymentModeId">Payment Mode</label>
+                                    <select class="form-control" id="paymentModeId">
+                                        <option value="">Select</option>
+                                        <option value="Card Payment">Credit/Debit Card</option>
+                                        <option value="Gift Card Payment">Gift Card</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="reset" class="border btn btn-light" data-dismiss="modal">Close</button>
+                        <button type="button" class="border btn btn-info" ng-click="payBill()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
