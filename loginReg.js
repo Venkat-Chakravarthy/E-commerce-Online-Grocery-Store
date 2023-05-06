@@ -1,4 +1,4 @@
-var URL = "https://fir-1c7de-default-rtdb.firebaseio.com/"
+ar URL = "https://fir-1c7de-default-rtdb.firebaseio.com/"
 function checkIsNull(value) {
     return value === "" || value === undefined || value === null ? true : false;
 }
